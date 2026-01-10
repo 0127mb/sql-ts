@@ -9,53 +9,51 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Book = void 0;
+exports.CourseEntity = void 0;
 const typeorm_1 = require("typeorm");
-const author_entity_1 = require("./author.entity");
-let Book = class Book extends typeorm_1.BaseEntity {
+let CourseEntity = class CourseEntity extends typeorm_1.BaseEntity {
     id;
     title;
+    full_name;
     discount;
     price_now;
     category;
     about;
-    authorId;
-    author;
+    way;
 };
-exports.Book = Book;
+exports.CourseEntity = CourseEntity;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Book.prototype, "id", void 0);
+], CourseEntity.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 128, nullable: true }),
+    (0, typeorm_1.Column)({ length: 128 }),
     __metadata("design:type", String)
-], Book.prototype, "title", void 0);
+], CourseEntity.prototype, "title", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 24, nullable: true }),
+    (0, typeorm_1.Column)({ length: 15 }),
     __metadata("design:type", String)
-], Book.prototype, "discount", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ length: 24, nullable: true }),
-    __metadata("design:type", String)
-], Book.prototype, "price_now", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: true, length: 20 }),
-    __metadata("design:type", String)
-], Book.prototype, "category", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ length: 15, nullable: true }),
-    __metadata("design:type", String)
-], Book.prototype, "about", void 0);
+], CourseEntity.prototype, "full_name", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", Number)
-], Book.prototype, "authorId", void 0);
+    __metadata("design:type", String)
+], CourseEntity.prototype, "discount", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => author_entity_1.Author, author => author.books, { onDelete: "CASCADE", nullable: true }),
-    (0, typeorm_1.JoinColumn)({ name: 'authorId' }),
-    __metadata("design:type", author_entity_1.Author)
-], Book.prototype, "author", void 0);
-exports.Book = Book = __decorate([
-    (0, typeorm_1.Entity)("Books")
-], Book);
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], CourseEntity.prototype, "price_now", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], CourseEntity.prototype, "category", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], CourseEntity.prototype, "about", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], CourseEntity.prototype, "way", void 0);
+exports.CourseEntity = CourseEntity = __decorate([
+    (0, typeorm_1.Entity)('courses')
+], CourseEntity);

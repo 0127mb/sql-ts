@@ -1,5 +1,5 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Book } from "./book.entity";
+import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Book} from "./book.entity";
 
 @Entity("Author")
 export class Author extends BaseEntity {
@@ -8,7 +8,6 @@ export class Author extends BaseEntity {
 
     @Column()
     name: string;
-
     @Column()
     surname: string;
 
