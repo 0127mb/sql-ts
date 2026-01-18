@@ -1,28 +1,35 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, BaseEntity} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, BaseEntity, ManyToMany, OneToOne} from "typeorm";
 import {Author} from "./author.entity";
-import {isBooleanObject} from "node:util/types";
+import {Language} from "../Features/languages/entities/language.entity";
+import {Cart} from "../Features/Cart/entites/Cart.entity";
+import {Category} from "./category.entity";
 
-@Entity("Books")
+@Entity("books")
 export class Book extends BaseEntity {
+
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({length: 128,nullable: true })
+    @Column({ length: 128, nullable: true })
     title: string;
 
-    @Column({length: 24, nullable: true})
+    @ManyToMany(() => Language, language => language.book)
+    languages: Language[];
+
+    @OneToOne(() => Cart, cart => cart.book)
+    cart: Cart;
+
+    @Column({ length: 24, nullable: true })
     discount: string;
-    @Column({length: 24, nullable: true})
+
+    @Column({ length: 24 })
     price_now: string;
-    @Column({nullable: true, length: 20})
-    category: string;
-    @Column({length: 15, nullable: true})
-    about: string;
 
-    @Column({nullable: true})
-    authorId: number;
+    @ManyToMany( () => Category,category => category.book)
+    category: Category[];
 
-    @ManyToOne(() => Author, author => author.books, {onDelete: "CASCADE", nullable: true})
-    @JoinColumn({name: 'authorId'})
+
+    @ManyToOne(() => Author, author => author.books, { onDelete: "CASCADE" })
+    @JoinColumn({ name: "authorId" })
     author: Author;
 }

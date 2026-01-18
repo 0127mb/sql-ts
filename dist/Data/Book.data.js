@@ -11,6 +11,7 @@ exports.cards = [{
         surname: "Fisher",
     },
     {
+        "author_id": 1,
         title: 'Bobbi Fisher shaxmatni o‘ynashni o‘rganing',
         discount: '',
         price_now: '180 000.00 uzs',
@@ -44,3 +45,4 @@ exports.cards = [{
         name: "Mikhail",
         surname: "Litvin",
     }];
+//# sourceMappingURL=Book.data.js.map

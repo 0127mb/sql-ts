@@ -12,14 +12,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Book = void 0;
 const typeorm_1 = require("typeorm");
 const author_entity_1 = require("./author.entity");
+const language_entity_1 = require("../Features/languages/entities/language.entity");
+const Cart_entity_1 = require("../Features/Cart/entites/Cart.entity");
+const category_entity_1 = require("./category.entity");
 let Book = class Book extends typeorm_1.BaseEntity {
     id;
     title;
+    languages;
+    cart;
     discount;
     price_now;
     category;
-    about;
-    authorId;
     author;
 };
 exports.Book = Book;
@@ -32,30 +35,31 @@ __decorate([
     __metadata("design:type", String)
 ], Book.prototype, "title", void 0);
 __decorate([
+    (0, typeorm_1.ManyToMany)(() => language_entity_1.Language, language => language.book),
+    __metadata("design:type", Array)
+], Book.prototype, "languages", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => Cart_entity_1.Cart, cart => cart.book),
+    __metadata("design:type", Cart_entity_1.Cart)
+], Book.prototype, "cart", void 0);
+__decorate([
     (0, typeorm_1.Column)({ length: 24, nullable: true }),
     __metadata("design:type", String)
 ], Book.prototype, "discount", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 24, nullable: true }),
+    (0, typeorm_1.Column)({ length: 24 }),
     __metadata("design:type", String)
 ], Book.prototype, "price_now", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true, length: 20 }),
-    __metadata("design:type", String)
+    (0, typeorm_1.ManyToMany)(() => category_entity_1.Category, category => category.book),
+    __metadata("design:type", Array)
 ], Book.prototype, "category", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 15, nullable: true }),
-    __metadata("design:type", String)
-], Book.prototype, "about", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", Number)
-], Book.prototype, "authorId", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => author_entity_1.Author, author => author.books, { onDelete: "CASCADE", nullable: true }),
-    (0, typeorm_1.JoinColumn)({ name: 'authorId' }),
+    (0, typeorm_1.ManyToOne)(() => author_entity_1.Author, author => author.books, { onDelete: "CASCADE" }),
+    (0, typeorm_1.JoinColumn)({ name: "authorId" }),
     __metadata("design:type", author_entity_1.Author)
 ], Book.prototype, "author", void 0);
 exports.Book = Book = __decorate([
-    (0, typeorm_1.Entity)("Books")
+    (0, typeorm_1.Entity)("books")
 ], Book);
+//# sourceMappingURL=book.entity.js.map

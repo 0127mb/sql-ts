@@ -4,32 +4,58 @@ exports.authorrouter = void 0;
 const express_1 = require("express");
 const author_entity_1 = require("../../entities/author.entity");
 exports.authorrouter = (0, express_1.Router)();
+/**
+ * @swagger
+ * /api/authors:
+ *   get:
+ *     tags:
+ *       - Authors
+ *     summary: Get all authors
+ *     description: Retrieve a list of all authors with their books
+ *     responses:
+ *       200:
+ *         description: List of authors
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Author'
+ *       500:
+ *         description: Server error
+ */
 exports.authorrouter.get("/", async (req, res) => {
-    if (author_entity_1.Author.length === 0) {
-        const cards = [{
-                name: "Robert",
-                surname: 'Fisher',
-            },
-            {
-                name: "Jonatan",
-                surname: "Dez"
-            },
-            {
-                name: "Andre",
-                surname: 'Miladze'
-            }, {
-                name: "David",
-                surname: 'Bronstein'
-            }, {
-                name: "Mikhail",
-                surname: "Litvin"
-            }
-        ];
-        return res.json(cards);
-    }
+    const getall = await author_entity_1.Author.find({ relations: ['books'] });
+    return res.status(200).json(getall);
 });
+/**
+ * @swagger
+ * /api/authors:
+ *   post:
+ *     tags:
+ *       - Authors
+ *     summary: Create a new author
+ *     description: Create a new author entry
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Author'
+ *     responses:
+ *       201:
+ *         description: Author created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Author'
+ *       500:
+ *         description: Server error
+ */
 exports.authorrouter.post("/", async (req, res) => {
     try {
+        const dto = Object.assign(new author_entity_1.Author(), req.body);
+        const { authorId, name, surname } = req.body;
         const newAuthor = author_entity_1.Author.create(req.body);
         await author_entity_1.Author.save(newAuthor);
         res.status(201).json(newAuthor);
@@ -38,3 +64,43 @@ exports.authorrouter.post("/", async (req, res) => {
         res.status(500).json({ message: "Server error", error: err });
     }
 });
+/**
+ * @swagger
+ * /api/authors:
+ *   delete:
+ *     tags:
+ *       - Authors
+ *     summary: Delete an author
+ *     description: Delete an author by ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Author deleted successfully
+ *       400:
+ *         description: ID is required
+ *       500:
+ *         description: Server error
+ */
+exports.authorrouter.delete("/", async (req, res) => {
+    const { id } = await req.body;
+    const find = await author_entity_1.Author.findOne({ where: { id } });
+    try {
+        if (!id) {
+            return res.status(400).send('the id must have in body');
+        }
+        const deleted = author_entity_1.Author.remove(find);
+        return res.status(200).json(deleted);
+    }
+    catch (error) {
+        return res.status(500).json({ message: "Server error", error: error });
+    }
+});
+//# sourceMappingURL=Author.controller.js.map

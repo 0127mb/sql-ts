@@ -57,3 +57,4 @@ __decorate([
 exports.CourseEntity = CourseEntity = __decorate([
     (0, typeorm_1.Entity)('courses')
 ], CourseEntity);
+//# sourceMappingURL=course.entity.js.map

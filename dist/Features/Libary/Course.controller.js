@@ -4,7 +4,28 @@ exports.Courserouter = void 0;
 const express_1 = require("express");
 const course_entity_1 = require("../../entities/course.entity");
 const Course_data_1 = require("../../Data/Course-data");
+const course_dto_1 = require("../../dto/course.dto");
 exports.Courserouter = (0, express_1.Router)();
+/**
+ * @swagger
+ * /api/courses:
+ *   get:
+ *     tags:
+ *       - Courses
+ *     summary: Get all courses
+ *     description: Retrieve a list of all courses
+ *     responses:
+ *       200:
+ *         description: List of courses
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Course'
+ *       500:
+ *         description: Server error
+ */
 exports.Courserouter.get("/", async (req, res) => {
     try {
         const course = await course_entity_1.CourseEntity.find();
@@ -20,9 +41,36 @@ exports.Courserouter.get("/", async (req, res) => {
         return res.status(500).send("xatolik yuz berdi");
     }
 });
+/**
+ * @swagger
+ * /api/courses:
+ *   post:
+ *     tags:
+ *       - Courses
+ *     summary: Create a new course
+ *     description: Create a new course entry
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Course'
+ *     responses:
+ *       201:
+ *         description: Course created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Course'
+ *       400:
+ *         description: Invalid request body
+ *       500:
+ *         description: Server error
+ */
 exports.Courserouter.post("/", async (req, res) => {
     try {
         const { title, full_name, discount, price_now, category, about, way } = req.body;
+        const dto = Object.assign(new course_dto_1.CreateCourseDto(), req.body);
         if (!title || !full_name || !discount || !price_now || !category || !about || !way) {
             return res.status(400).send("body should not be empty or invalid");
         }
@@ -34,7 +82,48 @@ exports.Courserouter.post("/", async (req, res) => {
         return res.status(500).send("xatolik yuz berdi");
     }
 });
-exports.Courserouter.put("/", async (req, res) => {
+/**
+ * @swagger
+ * /api/courses:
+ *   put:
+ *     tags:
+ *       - Courses
+ *     summary: Update a course
+ *     description: Update an existing course by ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *               title:
+ *                 type: string
+ *               full_name:
+ *                 type: string
+ *               discount:
+ *                 type: number
+ *               price_now:
+ *                 type: number
+ *               category:
+ *                 type: string
+ *               about:
+ *                 type: string
+ *               way:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Course updated successfully
+ *       404:
+ *         description: Course not found
+ *       400:
+ *         description: Invalid request body
+ *       500:
+ *         description: Server error
+ */
+exports.Courserouter.post("/", async (req, res) => {
     try {
         const { id, title, full_name, discount, price_now, category, about, way } = req.body;
         if (!id || !title || !full_name || !discount || !price_now || !category || !about || !way) {
@@ -66,3 +155,4 @@ exports.Courserouter.put("/", async (req, res) => {
         });
     }
 });
+//# sourceMappingURL=Course.controller.js.map

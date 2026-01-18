@@ -1,8 +1,30 @@
 import {Router, Request, Response} from "express";
 import {CourseEntity} from "../../entities/course.entity";
 import {cards1} from "../../Data/Course-data";
+import { CreateCourseDto } from "../../dto/course.dto";
 
 export const Courserouter = Router();
+
+/**
+ * @swagger
+ * /api/courses:
+ *   get:
+ *     tags:
+ *       - Courses
+ *     summary: Get all courses
+ *     description: Retrieve a list of all courses
+ *     responses:
+ *       200:
+ *         description: List of courses
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Course'
+ *       500:
+ *         description: Server error
+ */
 Courserouter.get("/", async (req: Request, res: Response) => {
     try {
         const course = await CourseEntity.find();
@@ -22,6 +44,32 @@ Courserouter.get("/", async (req: Request, res: Response) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/courses:
+ *   post:
+ *     tags:
+ *       - Courses
+ *     summary: Create a new course
+ *     description: Create a new course entry
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Course'
+ *     responses:
+ *       201:
+ *         description: Course created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Course'
+ *       400:
+ *         description: Invalid request body
+ *       500:
+ *         description: Server error
+ */
 Courserouter.post("/", async (req: Request, res: Response) => {
     try {
         const {
@@ -33,6 +81,7 @@ Courserouter.post("/", async (req: Request, res: Response) => {
             about,
             way
         } = req.body;
+        const dto = Object.assign(new CreateCourseDto(), req.body)
 
         if (!title || !full_name || !discount || !price_now || !category || !about || !way) {
             return res.status(400).send("body should not be empty or invalid");
@@ -47,7 +96,49 @@ Courserouter.post("/", async (req: Request, res: Response) => {
         return res.status(500).send("xatolik yuz berdi");
     }
 });
-Courserouter.put("/", async (req: Request, res: Response) => {
+
+/**
+ * @swagger
+ * /api/courses:
+ *   put:
+ *     tags:
+ *       - Courses
+ *     summary: Update a course
+ *     description: Update an existing course by ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *               title:
+ *                 type: string
+ *               full_name:
+ *                 type: string
+ *               discount:
+ *                 type: number
+ *               price_now:
+ *                 type: number
+ *               category:
+ *                 type: string
+ *               about:
+ *                 type: string
+ *               way:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Course updated successfully
+ *       404:
+ *         description: Course not found
+ *       400:
+ *         description: Invalid request body
+ *       500:
+ *         description: Server error
+ */
+Courserouter.post("/", async (req: Request, res: Response) => {
     try {
         const {
             id,
@@ -68,9 +159,9 @@ Courserouter.put("/", async (req: Request, res: Response) => {
         }
 
 
-        const course = await CourseEntity.findOne({ where: { id } });
+        const course = await CourseEntity.findOne({where: {id}});
         if (!course) {
-            return res.status(404).json({ message: "Raqam topilmadi" });
+            return res.status(404).json({message: "Raqam topilmadi"});
         }
 
 

@@ -12,10 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Author = void 0;
 const typeorm_1 = require("typeorm");
 const book_entity_1 = require("./book.entity");
+const category_entity_1 = require("./category.entity");
 let Author = class Author extends typeorm_1.BaseEntity {
     id;
+    authorId;
     name;
-    surname;
+    category;
     books;
 };
 exports.Author = Author;
@@ -24,13 +26,17 @@ __decorate([
     __metadata("design:type", Number)
 ], Author.prototype, "id", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], Author.prototype, "authorId", void 0);
+__decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Author.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Author.prototype, "surname", void 0);
+    (0, typeorm_1.OneToMany)(() => category_entity_1.Category, (category) => category.Author),
+    __metadata("design:type", Array)
+], Author.prototype, "category", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => book_entity_1.Book, book => book.author),
     __metadata("design:type", Array)
@@ -38,3 +44,4 @@ __decorate([
 exports.Author = Author = __decorate([
     (0, typeorm_1.Entity)("Author")
 ], Author);
+//# sourceMappingURL=author.entity.js.map

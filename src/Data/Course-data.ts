@@ -1,6 +1,7 @@
 export const cards1 = [{
     title: 'Shaxmat donalari bilan tanishuv',
     full_name: "Robert Fisher",
+    "author_id": 1,
     discount: '205 000.00uzs',
     price_now: '96 000.00 uzs',
     category: 'Boshlang‘ich',
@@ -8,9 +9,10 @@ export const cards1 = [{
     way: "Strategiya",
 },
     {
+
         title: 'Shoxga hujum qilish',
         full_name: 'Andre Konfutsiy',
-        // discount: '205 000.00uzs',
+        "author_id": 2,
         price_now: '96 000.00 uzs',
         category: 'Boshlang‘ich',
         about: '8 ta bo’lim',
@@ -19,6 +21,7 @@ export const cards1 = [{
     {
         title: 'Mot qilish',
         full_name: 'David Harikon',
+        "author_id": 3,
         discount: '160 000.00uzs',
         price_now: '107 000.00 uzs',
         category: 'Professional',
@@ -27,6 +30,7 @@ export const cards1 = [{
     }, {
         title: 'Asosiy taktikalar',
         full_name: 'Paul  Heckler',
+        "author_id": 4,
         discount: 'none',
         price_now: 'Bepul kurs',
         category: 'Havaskor',
