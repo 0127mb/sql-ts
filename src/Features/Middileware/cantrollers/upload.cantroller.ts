@@ -28,7 +28,7 @@ export const uploadRouter = Router();
  *       404:
  *         description: No file provided
  */
-uploadRouter.post('/', upload.single("icon"), async (req: Request, res: Response) => {
+uploadRouter.post('/', upload.single("image"), async (req: Request, res: Response) => {
     //@ts-ignore
     if (!req.file) {
         return res.status(404).send("Not Found")

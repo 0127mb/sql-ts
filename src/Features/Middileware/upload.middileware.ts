@@ -1,34 +1,45 @@
-import multer from "multer"
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { Request } from "express";
+
+
+const uploadDir = path.join(process.cwd(), "uploads");
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+}
 
 const storage = multer.diskStorage({
-    destination: (req, file, callback,) => {
-        callback(null, "/uploads");
+    destination: (req, file, callback) => {
+        callback(null, uploadDir);
     },
-    filename: (req, file, callback) => {
-        const [originName, extension] = file.originalname.split(".")
-        const filename = `${originName}_${Date.now()}-${extension}`
 
+    filename: (req: Request, file, callback) => {
+        const ext = path.extname(file.originalname); // .png
+        const filename = `image_${Date.now()}${ext}`;
         callback(null, filename);
+    },
+});
 
-    }
+const fileFilter: multer.Options["fileFilter"] = (req, file, callback) => {
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/jpg",
+        "image/webp",
+    ];
 
-
-})
-
-const filter: multer.Options['fileFilter'] = (req, file, callback) => {
-    const Allowedtypess = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
-    if (!Allowedtypess.includes((file.minetype))) {
+    if (!allowedTypes.includes(file.mimetype)) {
         callback(new Error("Invalid file type"));
     } else {
         callback(null, true);
     }
+};
 
-
-}
 export const upload = multer({
     storage,
-    filter,
+    fileFilter,
     limits: {
-        fileSize: 1024 * 1024 * 5
-    }
-})
+        fileSize: 5 * 1024 * 1024, // 5MB
+    },
+});

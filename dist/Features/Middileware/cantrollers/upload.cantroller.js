@@ -29,7 +29,7 @@ exports.uploadRouter = (0, express_1.Router)();
  *       404:
  *         description: No file provided
  */
-exports.uploadRouter.post('/', upload_middileware_1.upload.single("icon"), async (req, res) => {
+exports.uploadRouter.post('/', upload_middileware_1.upload.single("image"), async (req, res) => {
     //@ts-ignore
     if (!req.file) {
         return res.status(404).send("Not Found");

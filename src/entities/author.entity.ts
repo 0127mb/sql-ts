@@ -10,6 +10,8 @@ export class Author extends BaseEntity {
     authorId: number;
     @Column()
     name: string;
+    @Column({nullable: true})
+    image: string;
     @OneToMany(()=> Category, (category) => category.Author,)
     category: Category[];
 

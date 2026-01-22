@@ -22,6 +22,7 @@ let Book = class Book extends typeorm_1.BaseEntity {
     cart;
     discount;
     price_now;
+    image;
     category;
     author;
 };
@@ -50,6 +51,10 @@ __decorate([
     (0, typeorm_1.Column)({ length: 24 }),
     __metadata("design:type", String)
 ], Book.prototype, "price_now", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Book.prototype, "image", void 0);
 __decorate([
     (0, typeorm_1.ManyToMany)(() => category_entity_1.Category, category => category.book),
     __metadata("design:type", Array)

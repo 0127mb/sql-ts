@@ -17,6 +17,7 @@ let Author = class Author extends typeorm_1.BaseEntity {
     id;
     authorId;
     name;
+    image;
     category;
     books;
 };
@@ -33,6 +34,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Author.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Author.prototype, "image", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => category_entity_1.Category, (category) => category.Author),
     __metadata("design:type", Array)

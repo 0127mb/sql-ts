@@ -1,65 +1,12 @@
 import {Router, Request, Response} from "express";
 import {Book} from "../../entities/book.entity";
-import {Author} from "../../entities/author.entity";
-import {authorrouter} from "./Author.controller";
-import {cards} from "../../Data/Book.data";
+
+import { upload } from "../Middileware/upload.middileware";
+
+const relationsToTest = ["author", "languages", "category", "cart"];
 
 
 export const Bookrouter = Router();
-
-/**
- * @swagger
- * /api/books:
- *   get:
- *     tags:
- *       - Books
- *     summary: Get all books
- *     description: Retrieve a list of all books with their authors, languages, categories, and carts
- *     responses:
- *       200:
- *         description: List of books
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Book'
- *       500:
- *         description: Server error
- */
-Bookrouter.get('/', async (req: Request, res: Response) => {
-
-    try {
-
-        let relationsToTest = ["author", "languages", "category", "cart"];
-        let books = null;
-        let errorRelation = null;
-        for (const rel of relationsToTest) {
-            try {
-                books = await Book.find({ relations: [rel] });
-            } catch (err) {
-                errorRelation = rel;
-                break;
-            }
-        }
-        if (errorRelation) {
-            return res.status(500).json({
-                message: `Server error: relation '${errorRelation}' is misconfigured or missing`,
-                error: errorRelation
-            });
-        }
-
-        books = await Book.find({ relations: relationsToTest });
-        return res.status(200).json(books);
-    } catch (error) {
-        console.error('Book GET error:', error);
-        return res.status(500).json({
-            message: "Server error",
-            error: error?.message || error,
-            stack: error?.stack || null
-        });
-    }
-});
 
 /**
  * @swagger
@@ -68,40 +15,56 @@ Bookrouter.get('/', async (req: Request, res: Response) => {
  *     tags:
  *       - Books
  *     summary: Create a new book
- *     description: Create a new book entry
+ *     consumes:
+ *       - multipart/form-data
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Book'
- *     responses:
- *       201:
- *         description: Book created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Book'
- *       400:
- *         description: Invalid request body
- *       500:
- *         description: Server error
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               discount:
+ *                 type: number
+ *               price_now:
+ *                 type: number
+ *               category:
+ *                 type: string
+ *               author:
+ *                 type: string
+ *               languages:
+ *                 type: string
+ *               cart:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *             required:
+ *               - title
+ *               - discount
+ *               - price_now
+ *               - category
+ *               - author
  */
-Bookrouter.post("/", async (req: Request, res: Response) => {
-    const {title, discount, price_now, category, author, languages, cart} = req.body;
-    const dto = Object.assign(new Book(), req.body)
+
+Bookrouter.post("/", upload.single('image'), async (req: Request, res: Response) => {
+    const { title, discount, price_now, category, languages, cart } = req.body;
     try {
-        if (!title || !discount || !price_now || !category || !author) {
+        if (!title || !discount || !price_now || !category ) {
             return res.status(400).json({ message: 'Missing required fields: title, discount, price_now, category, author' });
         }
 
-        const book = Book.create({ title, discount, price_now, category, author, languages, cart });
+        const book = Book.create({ title, discount, price_now, category,  languages, cart });
         await Book.save(book);
         return res.status(201).json(book);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error?.message || error });
     }
 });
+
+
 
 /**
  * @swagger
@@ -139,4 +102,4 @@ Bookrouter.delete('/', async (req: Request, res: Response) => {
         res.send(error);
     }
 
-})
+});

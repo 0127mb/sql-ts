@@ -1,6 +1,7 @@
 import {Router, Request, Response} from "express";
 import {Author} from "../../entities/author.entity";
 import {Category} from "../../entities/category.entity";
+import { upload } from "../Middileware/upload.middileware";
 
 
 export const authorrouter = Router();
@@ -31,6 +32,17 @@ authorrouter.get("/", async (req: Request, res: Response) => {
     return res.status(200).json(getall)
 });
 
+authorrouter.post("/", upload.single('image'), async (req: Request, res: Response) => {
+    try {
+        const dto = Object.assign(new Author(), req.body);
+        const {authorId, name, surname} = req.body
+        const newAuthor = Author.create(req.body);
+        await Author.save(newAuthor);
+        res.status(201).json(newAuthor);
+    } catch (err) {
+        res.status(500).json({message: "Server error", error: err});
+    }
+});
 /**
  * @swagger
  * /api/authors:
@@ -38,13 +50,29 @@ authorrouter.get("/", async (req: Request, res: Response) => {
  *     tags:
  *       - Authors
  *     summary: Create a new author
- *     description: Create a new author entry
+ *     description: Create a new author entry with image upload
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Author'
+ *             type: object
+ *             properties:
+ *               authorId:
+ *                 type: integer
+ *                 description: Author ID
+ *               name:
+ *                 type: string
+ *                 description: Author name
+ *               surname:
+ *                 type: string
+ *                 description: Author surname
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: Author image file
+ *             required:
+ *               - name
  *     responses:
  *       201:
  *         description: Author created successfully
@@ -55,7 +83,58 @@ authorrouter.get("/", async (req: Request, res: Response) => {
  *       500:
  *         description: Server error
  */
-authorrouter.post("/", async (req: Request, res: Response) => {
+authorrouter.post("/", upload.single('image'), async (req: Request, res: Response) => {
+    try {
+        const dto = Object.assign(new Author(), req.body);
+        const {authorId, name, surname} = req.body
+        const newAuthor = Author.create(req.body);
+        await Author.save(newAuthor);
+        res.status(201).json(newAuthor);
+    } catch (err) {
+        res.status(500).json({message: "Server error", error: err});
+    }
+});
+/**
+ * @swagger
+ * /api/authors:
+ *   post:
+ *     tags:
+ *       - Authors
+ *     summary: Create a new author
+ *     description: Create a new author entry with image upload
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               authorId:
+ *                 type: integer
+ *                 description: Author ID
+ *               name:
+ *                 type: string
+ *                 description: Author name
+ *               surname:
+ *                 type: string
+ *                 description: Author surname
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: Author image file
+ *             required:
+ *               - name
+ *     responses:
+ *       201:
+ *         description: Author created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Author'
+ *       500:
+ *         description: Server error
+ */
+authorrouter.post("/", upload.single('image'), async (req: Request, res: Response) => {
     try {
         const dto = Object.assign(new Author(), req.body);
         const {authorId, name, surname} = req.body
