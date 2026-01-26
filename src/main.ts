@@ -11,6 +11,7 @@ import {swaggerSpec} from "./swagger";
 import {Languagerauter} from "./Features/Libary/Language.controller";
 import {Category} from "./entities/category.entity";
 import {CategoryRouter} from "./Features/Libary/Category.controller";
+import {AuthRouter} from "./auth/Controllers/auth.controller";
 
 const app = express();
 app.use(express.json());
@@ -34,6 +35,7 @@ AppDataSource.initialize()
         app.use("/upload", uploadRouter)
         app.use("/language", Languagerauter)
         app.use("/category", CategoryRouter)
+        app.use("/auth", AuthRouter)
         app.listen(5000, () => {
             console.log("Server is listening on port 5000");
             console.log("Swagger documentation available at http://localhost:5000/api-docs");

@@ -4,8 +4,10 @@ exports.CategoryRouter = void 0;
 const category_entity_1 = require("../../entities/category.entity");
 const express_1 = require("express");
 const upload_middileware_1 = require("../Middileware/upload.middileware");
+const Validationmiddilware_1 = require("../../core/Validationmiddilware");
+const category_dto_1 = require("../../dto/category.dto");
 exports.CategoryRouter = (0, express_1.Router)();
-exports.CategoryRouter.post("/createCategory", upload_middileware_1.upload.single('image'), async (req, res) => {
+exports.CategoryRouter.post("/createCategory", (0, Validationmiddilware_1.Validationmiddlware)(category_dto_1.CreateCategoryDto), upload_middileware_1.upload.single('image'), async (req, res) => {
     const { who, about } = req.body;
     const dto = Object.assign(new category_entity_1.Category(), req.body);
     if (!who) {

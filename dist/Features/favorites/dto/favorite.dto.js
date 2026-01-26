@@ -10,21 +10,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateFavoriteDto = exports.CreateFavoriteDto = void 0;
-const User_entity_1 = require("../../Users/entities/User.entity");
 const class_validator_1 = require("class-validator");
-const class_transformer_1 = require("class-transformer");
+// import {User} from "../../../auth/entites/User.entity";
 class CreateFavoriteDto {
-    user;
+    // @IsObject()
+    // @ValidateNested()
+    // @Type(() => User)
+    // user: User;
     is_liked;
     count;
 }
 exports.CreateFavoriteDto = CreateFavoriteDto;
-__decorate([
-    (0, class_validator_1.IsObject)(),
-    (0, class_validator_1.ValidateNested)(),
-    (0, class_transformer_1.Type)(() => User_entity_1.User),
-    __metadata("design:type", User_entity_1.User)
-], CreateFavoriteDto.prototype, "user", void 0);
 __decorate([
     (0, class_validator_1.IsBoolean)(),
     __metadata("design:type", Boolean)
@@ -34,18 +30,15 @@ __decorate([
     __metadata("design:type", Number)
 ], CreateFavoriteDto.prototype, "count", void 0);
 class UpdateFavoriteDto {
-    user;
+    // @IsOptional()
+    // @IsObject()
+    // @ValidateNested()
+    // @Type(() => User)
+    // user?: User;
     is_liked;
     count;
 }
 exports.UpdateFavoriteDto = UpdateFavoriteDto;
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsObject)(),
-    (0, class_validator_1.ValidateNested)(),
-    (0, class_transformer_1.Type)(() => User_entity_1.User),
-    __metadata("design:type", User_entity_1.User)
-], UpdateFavoriteDto.prototype, "user", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsBoolean)(),

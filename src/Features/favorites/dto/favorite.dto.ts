@@ -1,14 +1,15 @@
 
-import { User } from '../../Users/entities/User.entity';
+
 import { IsBoolean, IsNumber, IsObject, ValidateNested, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
+// import {User} from "../../../auth/entites/User.entity";
 
 
 export class CreateFavoriteDto {
-  @IsObject()
-  @ValidateNested()
-  @Type(() => User)
-  user: User;
+  // @IsObject()
+  // @ValidateNested()
+  // @Type(() => User)
+  // user: User;
 
   @IsBoolean()
   is_liked: boolean;
@@ -19,11 +20,11 @@ export class CreateFavoriteDto {
 
 
 export class UpdateFavoriteDto {
-  @IsOptional()
-  @IsObject()
-  @ValidateNested()
-  @Type(() => User)
-  user?: User;
+  // @IsOptional()
+  // @IsObject()
+  // @ValidateNested()
+  // @Type(() => User)
+  // user?: User;
 
   @IsOptional()
   @IsBoolean()

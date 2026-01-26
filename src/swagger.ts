@@ -47,6 +47,17 @@ const options = {
             image: { type: 'string' },
           },
         },
+
+        User: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            email: { type: 'string', format: 'email' },
+            phoneNumber: { type: 'integer' },
+            password: { type: 'string' },
+            image: { type: 'string' },
+          },
+        },
       },
     },
 
@@ -147,7 +158,7 @@ const options = {
   },
 
 
-  apis: ['./src/**/*.ts'],
+  apis: ['./src/**/**.ts'],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);

@@ -11,10 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Favorite = void 0;
 const typeorm_1 = require("typeorm");
-const User_entity_1 = require("../../Users/entities/User.entity");
 let Favorite = class Favorite extends typeorm_1.BaseEntity {
     id;
-    user;
     is_liked;
     count;
 };
@@ -23,10 +21,6 @@ __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], Favorite.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.OneToOne)(() => User_entity_1.User, user => user.favorite),
-    __metadata("design:type", User_entity_1.User)
-], Favorite.prototype, "user", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Boolean)

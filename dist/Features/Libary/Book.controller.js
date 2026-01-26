@@ -4,6 +4,8 @@ exports.Bookrouter = void 0;
 const express_1 = require("express");
 const book_entity_1 = require("../../entities/book.entity");
 const upload_middileware_1 = require("../Middileware/upload.middileware");
+const Validationmiddilware_1 = require("../../core/Validationmiddilware");
+const book_dto_1 = require("../../dto/book.dto");
 const relationsToTest = ["author", "languages", "category", "cart"];
 exports.Bookrouter = (0, express_1.Router)();
 /**
@@ -46,7 +48,7 @@ exports.Bookrouter = (0, express_1.Router)();
  *               - category
  *               - author
  */
-exports.Bookrouter.post("/", upload_middileware_1.upload.single('image'), async (req, res) => {
+exports.Bookrouter.post("/", (0, Validationmiddilware_1.Validationmiddlware)(book_dto_1.CreateBookDto), upload_middileware_1.upload.single('image'), async (req, res) => {
     const { title, discount, price_now, category, languages, cart } = req.body;
     try {
         if (!title || !discount || !price_now || !category) {
@@ -96,5 +98,8 @@ exports.Bookrouter.delete('/', async (req, res) => {
     catch (error) {
         res.send(error);
     }
+});
+exports.Bookrouter.get('/', async (req, res) => {
+    const getall = book_entity_1.Book.find({ relations: ['author', 'languages', 'category', 'cart'] });
 });
 //# sourceMappingURL=Book.controller.js.map

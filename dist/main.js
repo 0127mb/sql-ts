@@ -15,6 +15,7 @@ const upload_cantroller_1 = require("./Features/Middileware/cantrollers/upload.c
 const swagger_1 = require("./swagger");
 const Language_controller_1 = require("./Features/Libary/Language.controller");
 const Category_controller_1 = require("./Features/Libary/Category.controller");
+const auth_controller_1 = require("./auth/Controllers/auth.controller");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 // Swagger Documentation
@@ -33,6 +34,7 @@ data_source_1.AppDataSource.initialize()
     app.use("/upload", upload_cantroller_1.uploadRouter);
     app.use("/language", Language_controller_1.Languagerauter);
     app.use("/category", Category_controller_1.CategoryRouter);
+    app.use("/auth", auth_controller_1.AuthRouter);
     app.listen(5000, () => {
         console.log("Server is listening on port 5000");
         console.log("Swagger documentation available at http://localhost:5000/api-docs");

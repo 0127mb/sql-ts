@@ -1,5 +1,6 @@
 
 import { IsNumber, IsOptional, IsString } from "class-validator";
+import {Type} from "class-transformer";
 
 
 export class CreateAuthorDto {
@@ -7,6 +8,7 @@ export class CreateAuthorDto {
   name: string;
 
   @IsOptional()
+  @Type(() => Number)
   @IsNumber()
   authorId?: number;
 }

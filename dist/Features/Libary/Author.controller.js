@@ -4,10 +4,41 @@ exports.authorrouter = void 0;
 const express_1 = require("express");
 const author_entity_1 = require("../../entities/author.entity");
 const upload_middileware_1 = require("../Middileware/upload.middileware");
+const author_dto_1 = require("../../dto/author.dto");
+const Validationmiddilware_1 = require("../../core/Validationmiddilware");
 exports.authorrouter = (0, express_1.Router)();
 /**
  * @swagger
- * /api/authors:
+ * /books:
+ *   get:
+ *     tags:
+ *       - Books
+ *     summary: Get all books
+ *     description: Retrieve a list of all books with their authors and categories
+ *     responses:
+ *       200:
+ *         description: List of books
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Book'
+ *       500:
+ *         description: Server error
+ */
+exports.authorrouter.get("/books", async (req, res) => {
+    try {
+        const books = await require("../../entities/book.entity").Book.find({ relations: ["author", "category"] });
+        return res.status(200).json(books);
+    }
+    catch (error) {
+        return res.status(500).json({ message: "Server error", error });
+    }
+});
+/**
+ * @swagger
+ * /authors:
  *   get:
  *     tags:
  *       - Authors
@@ -29,7 +60,7 @@ exports.authorrouter.get("/", async (req, res) => {
     const getall = await author_entity_1.Author.find({ relations: ['books'] });
     return res.status(200).json(getall);
 });
-exports.authorrouter.post("/", upload_middileware_1.upload.single('image'), async (req, res) => {
+exports.authorrouter.post("/", upload_middileware_1.upload.single('image'), (0, Validationmiddilware_1.Validationmiddlware)(author_dto_1.CreateAuthorDto), async (req, res) => {
     try {
         const dto = Object.assign(new author_entity_1.Author(), req.body);
         const { authorId, name, surname } = req.body;
@@ -43,7 +74,7 @@ exports.authorrouter.post("/", upload_middileware_1.upload.single('image'), asyn
 });
 /**
  * @swagger
- * /api/authors:
+ * /authors:
  *   post:
  *     tags:
  *       - Authors
@@ -81,62 +112,9 @@ exports.authorrouter.post("/", upload_middileware_1.upload.single('image'), asyn
  *       500:
  *         description: Server error
  */
-exports.authorrouter.post("/", upload_middileware_1.upload.single('image'), async (req, res) => {
+exports.authorrouter.post("/", upload_middileware_1.upload.single('image'), (0, Validationmiddilware_1.Validationmiddlware)(author_dto_1.CreateAuthorDto), async (req, res) => {
     try {
         const dto = Object.assign(new author_entity_1.Author(), req.body);
-        const { authorId, name, surname } = req.body;
-        const newAuthor = author_entity_1.Author.create(req.body);
-        await author_entity_1.Author.save(newAuthor);
-        res.status(201).json(newAuthor);
-    }
-    catch (err) {
-        res.status(500).json({ message: "Server error", error: err });
-    }
-});
-/**
- * @swagger
- * /api/authors:
- *   post:
- *     tags:
- *       - Authors
- *     summary: Create a new author
- *     description: Create a new author entry with image upload
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               authorId:
- *                 type: integer
- *                 description: Author ID
- *               name:
- *                 type: string
- *                 description: Author name
- *               surname:
- *                 type: string
- *                 description: Author surname
- *               image:
- *                 type: string
- *                 format: binary
- *                 description: Author image file
- *             required:
- *               - name
- *     responses:
- *       201:
- *         description: Author created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Author'
- *       500:
- *         description: Server error
- */
-exports.authorrouter.post("/", upload_middileware_1.upload.single('image'), async (req, res) => {
-    try {
-        const dto = Object.assign(new author_entity_1.Author(), req.body);
-        const { authorId, name, surname } = req.body;
         const newAuthor = author_entity_1.Author.create(req.body);
         await author_entity_1.Author.save(newAuthor);
         res.status(201).json(newAuthor);

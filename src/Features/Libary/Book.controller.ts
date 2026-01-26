@@ -2,6 +2,8 @@ import {Router, Request, Response} from "express";
 import {Book} from "../../entities/book.entity";
 
 import { upload } from "../Middileware/upload.middileware";
+import {Validationmiddlware} from "../../core/Validationmiddilware";
+import {CreateBookDto} from "../../dto/book.dto";
 
 const relationsToTest = ["author", "languages", "category", "cart"];
 
@@ -49,7 +51,7 @@ export const Bookrouter = Router();
  *               - author
  */
 
-Bookrouter.post("/", upload.single('image'), async (req: Request, res: Response) => {
+Bookrouter.post("/", Validationmiddlware(CreateBookDto), upload.single('image'), async (req: Request, res: Response) => {
     const { title, discount, price_now, category, languages, cart } = req.body;
     try {
         if (!title || !discount || !price_now || !category ) {
@@ -103,3 +105,6 @@ Bookrouter.delete('/', async (req: Request, res: Response) => {
     }
 
 });
+Bookrouter.get('/', async(req: Request, res: Response) => {
+    const getall = Book.find({relations:['author', 'languages', 'category', 'cart']})
+})
