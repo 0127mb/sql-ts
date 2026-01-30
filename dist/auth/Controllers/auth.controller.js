@@ -12,6 +12,7 @@ const Validationmiddilware_1 = require("../../core/Validationmiddilware");
 const User_dto_1 = require("../Dto/User.dto");
 const User_entity_1 = require("../entites/User.entity");
 const Auth_middilware_1 = require("../middilware/Auth.middilware");
+const Config_1 = require("../../core/Config");
 exports.AuthRouter = (0, express_1.Router)();
 /**
  * @swagger
@@ -32,7 +33,7 @@ exports.AuthRouter = (0, express_1.Router)();
  *                 type: string
  *                 format: email
  *               phoneNumber:
- *                 type: integer
+ *                 type: string
  *               password:
  *                 type: string
  *                 format: password
@@ -85,7 +86,7 @@ exports.AuthRouter.post('/register', upload_middileware_1.upload.single("image")
  *                 type: string
  *                 format: email
  *               phoneNumber:
- *                 type: integer
+ *                 type: string
  *               password:
  *                 type: string
  *                 format: password
@@ -109,21 +110,25 @@ exports.AuthRouter.post('/register', upload_middileware_1.upload.single("image")
  *         description: Server error
  */
 exports.AuthRouter.post('/login', async (req, res, next) => {
-    const { email, phoneNumber, password } = req.body;
-    const user = await User_entity_1.User.findOne({ where: { phoneNumber: phoneNumber, email: email } });
+    const { full_name, email, phoneNumber, password } = req.body;
+    const user = await User_entity_1.User.findOne({ where: { phoneNumber, email } });
     if (!user) {
         return res.status(401).send('User not found or not added');
     }
-    const ismatch = bcryptjs_1.default.compare(password, user.password);
+    const ismatch = await bcryptjs_1.default.compare(password, user.password);
     if (!ismatch) {
         return res.status(401).send('User password invalid');
     }
-    const token = jsonwebtoken_1.default.sign({
+    const payload = {
         id: user.id,
         email: user.email,
-        phoneNumber: user.phoneNumber
-    }, process.env.secretkey || "secretkey", { expiresIn: '1d' });
-    return res.json({ token });
+        phoneNumber: user.phoneNumber,
+        role: user.role,
+    };
+    const token = jsonwebtoken_1.default.sign(payload, Config_1.JWT_SECRET, { expiresIn: "3h" });
+    const refreshToken = jsonwebtoken_1.default.sign(payload, Config_1.JWT_REFRESH, { expiresIn: "1d" });
+    return res.json({ token, refreshToken });
+    next();
 });
 /**
  * @swagger

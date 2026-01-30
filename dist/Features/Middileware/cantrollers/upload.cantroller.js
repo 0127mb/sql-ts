@@ -6,7 +6,7 @@ const upload_middileware_1 = require("../upload.middileware");
 exports.uploadRouter = (0, express_1.Router)();
 /**
  * @swagger
- * /api/upload:
+ * /upload:
  *   post:
  *     tags:
  *       - Upload
@@ -19,7 +19,7 @@ exports.uploadRouter = (0, express_1.Router)();
  *           schema:
  *             type: object
  *             properties:
- *               icon:
+ *               image:
  *                 type: string
  *                 format: binary
  *                 description: Icon file to upload

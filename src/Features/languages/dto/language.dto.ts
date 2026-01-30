@@ -1,5 +1,5 @@
 
-import { Book } from '../../../entities/book.entity';
+import { Book } from '../../../Book/entity/book.entity';
 import { IsString, IsOptional, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 

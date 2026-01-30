@@ -19,6 +19,7 @@ let Category = class Category extends typeorm_1.BaseEntity {
     about;
     image;
     Author;
+    bookId;
     book;
 };
 exports.Category = Category;
@@ -43,7 +44,12 @@ __decorate([
     __metadata("design:type", author_entity_1.Author)
 ], Category.prototype, "Author", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], Category.prototype, "bookId", void 0);
+__decorate([
     (0, typeorm_1.ManyToMany)(() => book_entity_1.Book, book => book.category),
+    (0, typeorm_1.JoinColumn)({ name: "bookId" }),
     __metadata("design:type", Array)
 ], Category.prototype, "book", void 0);
 exports.Category = Category = __decorate([

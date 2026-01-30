@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Courserouter = void 0;
 const express_1 = require("express");
-const course_entity_1 = require("../../entities/course.entity");
-const Course_data_1 = require("../../Data/Course-data");
+const course_entity_1 = require("../../course/entities/course.entity");
+const Course_data_1 = require("../Data/Course-data");
 const course_dto_1 = require("../../dto/course.dto");
 exports.Courserouter = (0, express_1.Router)();
 /**

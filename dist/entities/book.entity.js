@@ -56,7 +56,7 @@ __decorate([
     __metadata("design:type", String)
 ], Book.prototype, "image", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => category_entity_1.Category, category => category.book),
+    (0, typeorm_1.ManyToMany)(() => category_entity_1.Category, category => category.book, { nullable: true }),
     __metadata("design:type", Array)
 ], Book.prototype, "category", void 0);
 __decorate([

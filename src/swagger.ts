@@ -1,5 +1,11 @@
+// src/swagger.ts
 import swaggerJsdoc from 'swagger-jsdoc';
 
+/**
+ *  -------------------------------------------------------------------------
+ *  1️⃣  OPENAPI, INFO & SERVERS
+ *  -------------------------------------------------------------------------
+ */
 const options = {
   definition: {
     openapi: '3.0.0',
@@ -15,8 +21,23 @@ const options = {
       },
     ],
 
+    /**
+     *  -------------------------------------------------------------------------
+     *  2️⃣  COMPONENTS (security, schemas)
+     *  -------------------------------------------------------------------------
+     */
     components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+
+      /** ----------  M O D E L S   ---------- */
       schemas: {
+        /* ----------  VAR QO‘LDA BO‘LGAN MODELLAR  ---------- */
         Author: {
           type: 'object',
           properties: {
@@ -58,11 +79,122 @@ const options = {
             image: { type: 'string' },
           },
         },
-      },
+
+        /* ----------  YANGI MODELLAR  ---------- */
+
+        /** Kurs (Course) modeli */
+        Course: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            title: { type: 'string' },
+            description: { type: 'string' },
+            image: { type: 'string', format: 'url' },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time' },
+          },
+          required: ['title', 'description'],
+        },
+
+        /** Kurs yaratish (multipart/form-data) uchun request body */
+        CourseCreate: {
+          type: 'object',
+          properties: {
+            title: { type: 'string' },
+            description: { type: 'string' },
+            image: { type: 'string', format: 'binary' },
+          },
+          required: ['title', 'description'],
+        },
+
+        /** Level (dars) modeli */
+        Level: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            name: { type: 'string' },
+            description: { type: 'string' },
+            image: { type: 'string', format: 'url' },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time' },
+          },
+          required: ['name', 'description'],
+        },
+
+        /** Level yaratish uchun request body */
+        LevelCreate: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            description: { type: 'string' },
+            image: { type: 'string', format: 'binary' },
+          },
+          required: ['name', 'description'],
+        },
+
+        /** Review (baholash) modeli */
+        Review: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            grade: { type: 'integer', minimum: 1, maximum: 5 },
+            comment: { type: 'string' },
+            user_full_name: { type: 'string' },
+            user_email: { type: 'string', format: 'email' },
+            user_number: { type: 'string' },
+            createdAt: { type: 'string', format: 'date-time' },
+          },
+          required: [
+            'grade',
+            'comment',
+            'user_full_name',
+            'user_email',
+            'user_number',
+          ],
+        },
+
+        /** Review yaratish uchun request body */
+        ReviewCreate: {
+          type: 'object',
+          properties: {
+            grade: { type: 'integer', minimum: 1, maximum: 5 },
+            comment: { type: 'string' },
+            user_full_name: { type: 'string' },
+            user_email: { type: 'string', format: 'email' },
+            user_number: { type: 'string' },
+            user_password: { type: 'string', format: 'password' },
+          },
+          required: [
+            'grade',
+            'comment',
+            'user_full_name',
+            'user_email',
+            'user_number',
+            'user_password',
+          ],
+        },
+      }, // ← end of schemas
     },
 
+    /**
+     *  -------------------------------------------------------------------------
+     *  3️⃣  GLOBAL SECURITY (JWT bearer) – barcha endpointlar uchun
+     *  -------------------------------------------------------------------------
+     */
+    security: [{ bearerAuth: [] }],
+
+    /**
+     *  -------------------------------------------------------------------------
+     *  4️⃣  ENDPOINTS (paths)
+     *  -------------------------------------------------------------------------
+     *  Eski endpoint‑lar (book/author/category) – alohida qo‘shilgan.
+     *  Yangi endpoint‑lar (courses, levels, reviews) ham qo‘shildi.
+     *  Agar siz hamma controller‑larda JSDoc yozsangiz, `apis` qismi ularni
+     *  avtomatik qo‘shadi; lekin bu yerda ham aniq ko‘rinish beramiz.
+     *  -------------------------------------------------------------------------
+     */
     paths: {
-      // ================= BOOK =================
+      /* ----------  OLD ENDPOINTS  ---------- */
       '/books': {
         post: {
           tags: ['Books'],
@@ -79,23 +211,17 @@ const options = {
                     price_now: { type: 'number' },
                     category: { type: 'string' },
                     author: { type: 'string' },
-                    image: {
-                      type: 'string',
-                      format: 'binary',
-                    },
+                    image: { type: 'string', format: 'binary' },
                   },
                   required: ['title', 'discount', 'price_now'],
                 },
               },
             },
           },
-          responses: {
-            201: { description: 'Book created' },
-          },
+          responses: { 201: { description: 'Book created' } },
         },
       },
 
-      // ================= AUTHOR =================
       '/authors': {
         post: {
           tags: ['Authors'],
@@ -109,23 +235,17 @@ const options = {
                   properties: {
                     name: { type: 'string' },
                     surname: { type: 'string' },
-                    image: {
-                      type: 'string',
-                      format: 'binary',
-                    },
+                    image: { type: 'string', format: 'binary' },
                   },
                   required: ['name', 'surname'],
                 },
               },
             },
           },
-          responses: {
-            201: { description: 'Author created' },
-          },
+          responses: { 201: { description: 'Author created' } },
         },
       },
 
-      // ================= CATEGORY =================
       '/category': {
         post: {
           tags: ['Categories'],
@@ -139,26 +259,157 @@ const options = {
                   properties: {
                     who: { type: 'string' },
                     about: { type: 'string' },
-                    image: {
-                      type: 'string',
-                      format: 'binary',
-                    },
+                    image: { type: 'string', format: 'binary' },
                   },
                   required: ['who'],
                 },
               },
             },
           },
+          responses: { 201: { description: 'Category created' } },
+        },
+      },
+
+      /* ----------  NEW ENDPOINTS  ---------- */
+
+      /** GET + POST  /api/courses */
+      '/api/courses': {
+        get: {
+          tags: ['Courses'],
+          summary: 'Get all courses',
+          description: 'Return an array with every course stored in the system',
           responses: {
-            201: { description: 'Category created' },
+            200: {
+              description: 'Array of courses',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'array',
+                    items: { $ref: '#/components/schemas/Course' },
+                  },
+                },
+              },
+            },
+            500: { description: 'Server error' },
+          },
+        },
+
+        post: {
+          tags: ['Courses'],
+          summary: 'Create a new course',
+          description: 'Create a course (title, description, image). Image is uploaded with multipart/form-data.',
+          requestBody: {
+            required: true,
+            content: {
+              'multipart/form-data': {
+                schema: { $ref: '#/components/schemas/CourseCreate' },
+              },
+            },
+          },
+          responses: {
+            201: {
+              description: 'Course created successfully',
+              content: {
+                'application/json': {
+                  schema: { $ref: '#/components/schemas/Course' },
+                },
+              },
+            },
+            400: { description: 'Invalid request body' },
+            500: { description: 'Server error' },
           },
         },
       },
-    },
+
+      /** POST /api/levels */
+      '/api/levels': {
+        post: {
+          tags: ['Levels'],
+          summary: 'Create a new level (dars)',
+          description: 'Create a level with name, description and optional image (multipart/form-data).',
+          requestBody: {
+            required: true,
+            content: {
+              'multipart/form-data': {
+                schema: { $ref: '#/components/schemas/LevelCreate' },
+              },
+            },
+          },
+          responses: {
+            201: {
+              description: 'Level created successfully',
+              content: {
+                'application/json': {
+                  schema: { $ref: '#/components/schemas/Level' },
+                },
+              },
+            },
+            400: { description: 'Invalid request body' },
+            500: { description: 'Server error' },
+          },
+        },
+      },
+
+      /** POST /api/reviews/books */
+      '/api/reviews/books': {
+        post: {
+          tags: ['Reviews'],
+          summary: 'Create a review for a book',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ReviewCreate' },
+              },
+            },
+          },
+          responses: {
+            201: {
+              description: 'Review created successfully',
+              content: {
+                'application/json': {
+                  schema: { $ref: '#/components/schemas/Review' },
+                },
+              },
+            },
+            400: { description: 'Invalid body or user authentication failed' },
+            500: { description: 'Server error' },
+          },
+        },
+      },
+
+      /** POST /api/reviews/courses */
+      '/api/reviews/courses': {
+        post: {
+          tags: ['Reviews'],
+          summary: 'Create a review for a course',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ReviewCreate' },
+              },
+            },
+          },
+          responses: {
+            201: {
+              description: 'Review created successfully',
+              content: {
+                'application/json': {
+                  schema: { $ref: '#/components/schemas/Review' },
+                },
+              },
+            },
+            400: { description: 'Invalid body or user authentication failed' },
+            500: { description: 'Server error' },
+          },
+        },
+      },
+    }, // ← end of paths
   },
 
-
-  apis: ['./src/**/**.ts'],
+  /**  JSDoc‑dan avtomatik to‘plangan hamma controller‑lar  */
+  apis: ['./src/**/*.ts'],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);

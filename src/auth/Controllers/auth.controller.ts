@@ -1,13 +1,17 @@
-import {Router, Request, Response, NextFunction} from "express";
+import {NextFunction, Request, Response, Router} from "express";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken'
 import {upload} from "../../Features/Middileware/upload.middileware";
 import {Validationmiddlware} from "../../core/Validationmiddilware";
 import {RegisterUserDto} from "../Dto/User.dto";
 import {User} from "../entites/User.entity";
-import {AuthMiddilware} from "../middilware/Auth.middilware";
+import {AuthMiddilware, Roles} from "../middilware/Auth.middilware";
+import {Role} from "../../core/constns/enum";
+import {JWT_REFRESH, JWT_SECRET} from "../../core/Config";
 
 export const AuthRouter = Router()
+
+
 /**
  * @swagger
  * /auth/register:
@@ -27,7 +31,7 @@ export const AuthRouter = Router()
  *                 type: string
  *                 format: email
  *               phoneNumber:
- *                 type: integer
+ *                 type: string
  *               password:
  *                 type: string
  *                 format: password
@@ -83,7 +87,7 @@ AuthRouter.post('/register', upload.single("image"),
  *                 type: string
  *                 format: email
  *               phoneNumber:
- *                 type: integer
+ *                 type: string
  *               password:
  *                 type: string
  *                 format: password
@@ -106,25 +110,27 @@ AuthRouter.post('/register', upload.single("image"),
  *       500:
  *         description: Server error
  */
-AuthRouter.post('/login', async (req: Request, res: Response, next: NextFunction) => {
-    const {email, phoneNumber, password} = req.body;
-    const user = await User.findOne({where: {phoneNumber: phoneNumber, email: email}})
+AuthRouter.post('/login',async (req: Request, res: Response, next: NextFunction) => {
+    const {full_name,email, phoneNumber, password} = req.body;
+    const user = await User.findOne({where: {phoneNumber, email}})
     if (!user) {
         return res.status(401).send('User not found or not added')
     }
-    const ismatch = bcrypt.compare(password, user.password)
+    const ismatch = await bcrypt.compare(password, user.password)
     if (!ismatch) {
         return res.status(401).send('User password invalid')
     }
-    const token = jwt.sign({
-            id: user.id,
-            email: user.email,
-            phoneNumber: user.phoneNumber
+    const payload = {
+        id: user.id,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        role: user.role,
+    }
+    const token = jwt.sign(payload, JWT_SECRET, {expiresIn: "3h"})
+    const refreshToken = jwt.sign(payload, JWT_REFRESH, {expiresIn: "1d"})
 
-        }, process.env.secretkey || "secretkey",
-        {expiresIn: '1d'}
-    )
-   return  res.json({token})
+    return res.json({token, refreshToken})
+    next()
 })
 /**
  * @swagger
@@ -147,6 +153,8 @@ AuthRouter.post('/login', async (req: Request, res: Response, next: NextFunction
  *         description: Unauthorized
  */
 AuthRouter.get('/get', AuthMiddilware, (req: Request, res: Response) => {
-      return res.json({user: req.user})
+
+
+    return res.json({user: req.user})
 })
 console.log("AUTH ROUTER LOADED")

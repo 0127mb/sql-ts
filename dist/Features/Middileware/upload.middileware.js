@@ -16,7 +16,7 @@ const storage = multer_1.default.diskStorage({
         callback(null, uploadDir);
     },
     filename: (req, file, callback) => {
-        const ext = path_1.default.extname(file.originalname); // .png
+        const ext = path_1.default.extname(file.originalname);
         const filename = `image_${Date.now()}${ext}`;
         callback(null, filename);
     },

@@ -16,6 +16,7 @@ class RegisterUserDto {
     email;
     phoneNumber;
     password;
+    full_name;
 }
 exports.RegisterUserDto = RegisterUserDto;
 __decorate([
@@ -23,13 +24,20 @@ __decorate([
     __metadata("design:type", String)
 ], RegisterUserDto.prototype, "email", void 0);
 __decorate([
-    (0, class_validator_1.IsInt)(),
-    (0, class_transformer_1.Type)(() => Number),
-    __metadata("design:type", Number)
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(16),
+    (0, class_transformer_1.Type)(type => toString),
+    (0, class_validator_1.Matches)(/^\+\d{9,15}$/, { message: "number must be +998772980127 format" }),
+    __metadata("design:type", String)
 ], RegisterUserDto.prototype, "phoneNumber", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.MinLength)(6),
     __metadata("design:type", String)
 ], RegisterUserDto.prototype, "password", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], RegisterUserDto.prototype, "full_name", void 0);
 //# sourceMappingURL=User.dto.js.map

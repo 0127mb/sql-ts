@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateLanguageDto = exports.CreateLanguageDto = void 0;
-const book_entity_1 = require("../../../entities/book.entity");
+const book_entity_1 = require("../../../Book/entity/book.entity");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 class CreateLanguageDto {

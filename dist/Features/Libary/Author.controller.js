@@ -56,6 +56,22 @@ exports.authorrouter.get("/books", async (req, res) => {
  *       500:
  *         description: Server error
  */
+/**
+ * @swagger
+ * /authors/profile:
+ *   get:
+ *     summary: Get author profile (protected)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         description: Unauthorized
+ */
+exports.authorrouter.get("/profile", async (req, res) => {
+    res.status(200).json({ message: "Protected author profile" });
+});
 exports.authorrouter.get("/", async (req, res) => {
     const getall = await author_entity_1.Author.find({ relations: ['books'] });
     return res.status(200).json(getall);

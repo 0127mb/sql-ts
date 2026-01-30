@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Language = void 0;
 const typeorm_1 = require("typeorm");
-const book_entity_1 = require("../../../entities/book.entity");
+const book_entity_1 = require("../../../Book/entity/book.entity");
 let Language = class Language extends typeorm_1.BaseEntity {
     id;
     language;

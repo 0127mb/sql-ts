@@ -1,18 +1,22 @@
 import 'reflect-metadata'
 import {DataSource} from "typeorm"
-import {Book} from "../entities/book.entity";
-import {Author} from "../entities/author.entity";
-import {CourseEntity} from "../entities/course.entity";
-import {Cart} from "../Features/Cart/entites/Cart.entity";
+import {Book} from "../Book/entity/book.entity";
+import {Author} from "../Author/entity/author.entity";
+import {CourseEntity} from "../course/entities/course.entity";
 
-import {Category} from "../entities/category.entity";
+import {Category} from "../Category/entity/category.entity";
 import {Language} from "../Features/languages/entities/language.entity";
-import {Favorite} from "../Features/favorites/entities/favorite.entity";
+
 import {User} from "../auth/entites/User.entity";
-export const AppDataSource = new DataSource({
-    type: "postgres",
-    url: process.env.DB_URL,
-    entities: [Book, Author, CourseEntity,Cart,Category,Language,Favorite,User],
+import {Reviews} from "../Features/review/review.entity";
+import {LevelEntity} from "../Features/difficulty/entity/Level.entity";
+export const AppDataSource = new DataSource({type: "postgres",
+    host: process.env.DB_HOST || "localhost",
+    port: Number(process.env.DB_PORT) || 5432,
+    username: process.env.DB_USER || "postgres",
+    password: process.env.DB_PASSWORD || "123456",
+    database: process.env.DB_NAME || "homework",
+    entities: [Book, Author, CourseEntity,Category,Language,User,Reviews,LevelEntity],
     synchronize: true,
     logging: true
 })

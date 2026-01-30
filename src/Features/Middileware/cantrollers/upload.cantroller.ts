@@ -5,7 +5,7 @@ export const uploadRouter = Router();
 
 /**
  * @swagger
- * /api/upload:
+ * /upload:
  *   post:
  *     tags:
  *       - Upload
@@ -18,7 +18,7 @@ export const uploadRouter = Router();
  *           schema:
  *             type: object
  *             properties:
- *               icon:
+ *               image:
  *                 type: string
  *                 format: binary
  *                 description: Icon file to upload

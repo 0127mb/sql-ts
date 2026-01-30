@@ -11,11 +11,12 @@ if (!fs.existsSync(uploadDir)) {
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
+
         callback(null, uploadDir);
     },
 
     filename: (req: Request, file, callback) => {
-        const ext = path.extname(file.originalname); // .png
+        const ext = path.extname(file.originalname);
         const filename = `image_${Date.now()}${ext}`;
         callback(null, filename);
     },
@@ -40,6 +41,7 @@ export const upload = multer({
     storage,
     fileFilter,
     limits: {
+
         fileSize: 5 * 1024 * 1024, // 5MB
     },
 });
