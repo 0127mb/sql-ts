@@ -5,8 +5,7 @@ import {upload} from "../../Features/Middileware/upload.middileware";
 import {Validationmiddlware} from "../../core/Validationmiddilware";
 import {RegisterUserDto} from "../Dto/User.dto";
 import {User} from "../entites/User.entity";
-import {AuthMiddilware, Roles} from "../middilware/Auth.middilware";
-import {Role} from "../../core/constns/enum";
+import {AuthMiddilware} from "../middilware/Auth.middilware";
 import {JWT_REFRESH, JWT_SECRET} from "../../core/Config";
 
 export const AuthRouter = Router()
@@ -110,8 +109,8 @@ AuthRouter.post('/register', upload.single("image"),
  *       500:
  *         description: Server error
  */
-AuthRouter.post('/login',async (req: Request, res: Response, next: NextFunction) => {
-    const {full_name,email, phoneNumber, password} = req.body;
+AuthRouter.post('/login', async (req: Request, res: Response, next: NextFunction) => {
+    const {full_name, email, phoneNumber, password} = req.body;
     const user = await User.findOne({where: {phoneNumber, email}})
     if (!user) {
         return res.status(401).send('User not found or not added')
@@ -154,7 +153,7 @@ AuthRouter.post('/login',async (req: Request, res: Response, next: NextFunction)
  */
 AuthRouter.get('/get', AuthMiddilware, (req: Request, res: Response) => {
 
-
-    return res.json({user: req.user})
+    const books = User.find()
+    return res.status(200).send(books)
 })
 console.log("AUTH ROUTER LOADED")
