@@ -32,7 +32,7 @@ Courserouter.get("/", async (req: Request, res: Response) => {
     try {
         const courses = await CourseEntity.find();
 
-        // birinchi marta bo‘lsa demo ma’lumotni yaratamiz
+
         if (courses.length === 0) {
             const newCourses = CourseEntity.create(cards1 as Partial<CourseEntity>[]);
             await CourseEntity.save(newCourses);
